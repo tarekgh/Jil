@@ -39,9 +39,9 @@ namespace Jil.Deserialize
         int NextName;
 
         public InlineDeserializer(
-            Type optionsType, 
-            DateTimeFormat dateFormat, 
-            SerializationNameFormat serializationNameFormat, 
+            Type optionsType,
+            DateTimeFormat dateFormat,
+            SerializationNameFormat serializationNameFormat,
             bool readingFromString,
             bool preferIndirectSerialization,
             bool allPrimitivesThroughHelpers
@@ -319,7 +319,7 @@ namespace Jil.Deserialize
             RawReadChar(() => ThrowExpectedButEnded(c, "null"));    // int
             Emit.Duplicate();                                       // int int
             Emit.LoadConstant((int)c);                              // int int int
-            Emit.BranchIfEqual(gotChar);                            // int 
+            Emit.BranchIfEqual(gotChar);                            // int
             Emit.LoadConstant((int)'n');                            // int n
             Emit.BranchIfEqual(gotN);                               // --empty--
             ThrowExpected(c, "null");                               // --empty--
@@ -623,7 +623,7 @@ namespace Jil.Deserialize
             }
         }
 
-        static readonly MethodInfo TimeSpan_FromSeconds = typeof(TimeSpan).GetMethod("FromSeconds", BindingFlags.Static | BindingFlags.Public);
+        static readonly MethodInfo TimeSpan_FromSeconds = typeof(TimeSpan).GetMethod("FromSeconds", BindingFlags.Static | BindingFlags.Public, new Type[] { typeof(double) });
         void ReadSecondsTimeSpan()
         {
             const double TicksPerSecond = 10000000;
@@ -748,7 +748,7 @@ namespace Jil.Deserialize
             ExpectChar('t');                                    // --empty--
             ExpectChar('e');                                    // --empty--
             ExpectChar('(');                                    // --empty--
-            Emit.LoadArgument(0);                               // TextReader      
+            Emit.LoadArgument(0);                               // TextReader
             Emit.Call(Methods.GetReadMicrosoftDateTimeOffset(ReadingFromString)); // DateTimeOffset
             ExpectChar(')');                                                        // DateTimeOffset
             ExpectChar('\\');                                                       // DateTimeOffset
@@ -1177,7 +1177,7 @@ namespace Jil.Deserialize
             }
 
             var maybeNull = Emit.DefineLabel(GetNextName());
-            
+
 
             using (var loc = Emit.DeclareLocal(nullableType, GetNextName()))
             {
@@ -1293,7 +1293,7 @@ namespace Jil.Deserialize
                 // first step unrolled, cause ',' isn't legal
                 ConsumeWhiteSpace();                            // --empty--
                 loadList();                                     // listType
-                RawPeekChar();                                  // listType int 
+                RawPeekChar();                                  // listType int
                 Emit.LoadConstant(']');                         // listType int ']'
                 Emit.BranchIfEqual(done);                       // listType(*?)
                 Build(listMember, elementType);                             // listType(*?) elementType
@@ -1404,7 +1404,7 @@ namespace Jil.Deserialize
 
                 ConsumeWhiteSpace();        // --empty--
                 loadDict();                 // dictType(*?)
-                RawPeekChar();              // dictType(*?) int 
+                RawPeekChar();              // dictType(*?) int
                 Emit.LoadConstant('}');     // dictType(*?) int '}'
                 Emit.BranchIfEqual(done);   // dictType(*?)
                 if (keyType == typeof(string))
@@ -1434,7 +1434,7 @@ namespace Jil.Deserialize
 
                 Emit.MarkLabel(loopStart);              // --empty--
                 loadDict();                             // dictType(*?)
-                ReadSkipWhitespace();                   // dictType(*?) int 
+                ReadSkipWhitespace();                   // dictType(*?) int
                 ThrowIfEmptyAndWasExpecting(",", "}");  // dictType(*?) int
 
                 Emit.Duplicate();               // dictType(*?) int int
@@ -1664,7 +1664,7 @@ namespace Jil.Deserialize
 
                 ConsumeWhiteSpace();        // --empty--
                 loadObj();                  // objType(*?)
-                RawPeekChar();              // objType(*?) int 
+                RawPeekChar();              // objType(*?) int
                 Emit.LoadConstant('}');     // objType(*?) int '}'
                 Emit.BranchIfEqual(done);   // objType(*?)
                 ReadSkipWhitespace();       // objType(*?)
@@ -1727,7 +1727,7 @@ namespace Jil.Deserialize
 
                 Emit.MarkLabel(loopStart);              // --empty--
                 loadObj();                              // objType(*?)
-                ReadSkipWhitespace();                   // objType(*?) int 
+                ReadSkipWhitespace();                   // objType(*?) int
                 ThrowIfEmptyAndWasExpecting(",", "}");  // objType(*?) int
                 Emit.Duplicate();                       // objType(*?) int int
                 Emit.LoadConstant(',');                 // objType(*?) int int ','
@@ -2135,7 +2135,7 @@ namespace Jil.Deserialize
 
                 ConsumeWhiteSpace();        // --empty--
                 loadObj();                  // objType(*?)
-                RawPeekChar();              // objType(*?) int 
+                RawPeekChar();              // objType(*?) int
                 Emit.LoadConstant('}');     // objType(*?) int '}'
                 Emit.BranchIfEqual(done);   // objType(*?)
                 Emit.LoadField(order);      // objType(*?) Dictionary<string, int> string
@@ -2193,7 +2193,7 @@ namespace Jil.Deserialize
 
                 Emit.MarkLabel(loopStart);              // --empty--
                 loadObj();                              // objType(*?)
-                ReadSkipWhitespace();                   // objType(*?) int 
+                ReadSkipWhitespace();                   // objType(*?) int
                 ThrowIfEmptyAndWasExpecting(",", "}");  // objType(*?) int
 
                 Emit.Duplicate();                       // objType(*?) int int
@@ -2283,7 +2283,7 @@ namespace Jil.Deserialize
             var loopStart = Emit.DefineLabel(GetNextName());
 
             ConsumeWhiteSpace();                // --empty--
-            RawPeekChar();                      // int 
+            RawPeekChar();                      // int
             Emit.LoadConstant('}');             // int '}'
             Emit.BranchIfEqual(doneNotNull);    // --empty--
             Emit.LoadField(order);              // Dictionary<string, int> string
@@ -2331,7 +2331,7 @@ namespace Jil.Deserialize
 
             Emit.MarkLabel(loopStart);              // --empty--
             ConsumeWhiteSpace();                    // --empty--
-            RawPeekChar();                          // int 
+            RawPeekChar();                          // int
             ThrowIfEmptyAndWasExpecting(",", "}");  // int
 
             Emit.Duplicate();                   // int int
@@ -2452,7 +2452,7 @@ namespace Jil.Deserialize
 
             var loopStart = Emit.DefineLabel(GetNextName());
 
-            ReadSkipWhitespace();                       // int 
+            ReadSkipWhitespace();                       // int
             Emit.Duplicate();
             Emit.LoadConstant('}');                     // int '}'
             Emit.BranchIfEqual(doneNotNullPopSkipChar); // --empty--

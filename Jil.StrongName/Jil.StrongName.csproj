@@ -60,4 +60,10 @@
     <None Include="Properties\Jil.StrongName.snk" />
     <Compile Include="..\Jil\**\*.cs" Exclude="..\Jil\bin\**;..\Jil\obj\**" Link="%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+  </ItemGroup>
+
 </Project>
